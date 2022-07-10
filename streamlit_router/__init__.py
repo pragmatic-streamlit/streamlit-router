@@ -1,5 +1,6 @@
 import inspect
 import typing
+from uuid import uuid4
 from functools import wraps
 
 from werkzeug.routing import Map, Rule
@@ -55,8 +56,12 @@ class StreamlitRouter:
 
     def redirect(self, path: str, method: str = None):
         st.session_state['request'] = (path, method)
+        st.session_state['request_id'] = uuid4().hex
         st.experimental_rerun()
-
+        
+    def get_request_id(self):
+        return st.session_state.get('request_id', uuid4().hex)
+    
     def build(self, endpoint: str, values: typing.Dict = None, method: str = None):
         if not method and self.view_methods[endpoint]:
             method = self.view_methods[endpoint][0]
