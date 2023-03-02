@@ -12,13 +12,16 @@ class StreamlitRouter:
     https://werkzeug.palletsprojects.com/en/2.0.x/routing/
     """
 
-    def __init__(self, default_path='/', inject_name='router'):
+    def __init__(self, default_path='/', inject_name='router', *, state_name='streamlit-router-state'):
         self._map = Map()
         self.view_methods = {}
         self.views = {}
         self.default_path = default_path
         self.inject_name = inject_name
+        self.state_name = state_name
         self.urls = self._map.bind("", "/")
+        if not getattr(st.session_state, self.state_name, None):
+            setattr(st.session_state, self.state_name, {})
 
     def register(self, func: typing.Callable, path: str, methods: typing.List[str] = None, endpoint: str = None):
         return self.map(path, methods, endpoint)(func)
@@ -55,6 +58,7 @@ class StreamlitRouter:
         return func(**kwargs)
 
     def redirect(self, path: str, method: str = None):
+        self.reset_request_state()
         st.session_state['request'] = (path, method)
         st.session_state['request_id'] = uuid4().hex
         st.experimental_rerun()
@@ -62,6 +66,24 @@ class StreamlitRouter:
     def get_request_id(self):
         return st.session_state.get('request_id', uuid4().hex)
     
+    def get_request_state(self, name: str, default=None):
+        if getattr(st.session_state, self.state_name, None) is None:
+            st.session_state[self.state_name] = {}
+        state = getattr(st.session_state, self.state_name)
+        if state.get(name, None) is None:
+            state[name] = default
+        return state.get(name)
+    
+    def set_request_state(self, name: str, value: typing.Any):
+        if getattr(st.session_state, self.state_name, None) is None:
+            st.session_state[self.state_name] = {}
+        state = getattr(st.session_state, self.state_name)
+        state[name] = value
+    
+    def reset_request_state(self):
+        if getattr(st.session_state, self.state_name, None) is not None:
+            setattr(st.session_state, self.state_name, {})
+
     def build(self, endpoint: str, values: typing.Dict = None, method: str = None):
         if not method and self.view_methods[endpoint]:
             method = self.view_methods[endpoint][0]
