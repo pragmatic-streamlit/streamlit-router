@@ -74,6 +74,12 @@ class StreamlitRouter:
             state[name] = default
         return state.get(name)
     
+    def delete_request_state(self, name: str):
+        if getattr(st.session_state, self.state_name, None) is None:
+            st.session_state[self.state_name] = {}
+        state = getattr(st.session_state, self.state_name)
+        return state.pop(name, None)
+    
     def set_request_state(self, name: str, value: typing.Any):
         if getattr(st.session_state, self.state_name, None) is None:
             st.session_state[self.state_name] = {}
