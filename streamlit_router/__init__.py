@@ -23,7 +23,7 @@ class StreamlitRouter:
         self.inject_name = inject_name
         self.state_name = state_name
         self.urls = self._map.bind("", "/")
-        if not getattr(st.session_state, self.state_name, None):
+        if not st.session_state.get(self.state_name, None):
             setattr(st.session_state, self.state_name, AttributeDict())
 
     def register(self, func: typing.Callable, path: str, methods: typing.List[str] = None, endpoint: str = None):
@@ -70,9 +70,9 @@ class StreamlitRouter:
         return st.session_state.get('request_id', uuid4().hex)
     
     def get_request_state(self, name: str=None, default=None):
-        if getattr(st.session_state, self.state_name, None) is None:
-            st.session_state[self.state_name] = {}
-        state = getattr(st.session_state, self.state_name)
+        if st.session_state.get(self.state_name, None) is None:
+            st.session_state[self.state_name] = AttributeDict()
+        state = st.session_state.get(self.state_name)
         if name is None:
             return state
         if state.get(name, None) is None:
@@ -80,19 +80,19 @@ class StreamlitRouter:
         return state.get(name)
     
     def delete_request_state(self, name: str):
-        if getattr(st.session_state, self.state_name, None) is None:
+        if st.session_state.get(self.state_name, None) is None:
             st.session_state[self.state_name] = AttributeDict()
-        state = getattr(st.session_state, self.state_name)
+        state = st.session_state.get(self.state_name)
         return state.pop(name, None)
     
     def set_request_state(self, name: str, value: typing.Any):
-        if getattr(st.session_state, self.state_name, None) is None:
+        if st.session_state.get(self.state_name, None) is None:
             st.session_state[self.state_name] = AttributeDict()
-        state = getattr(st.session_state, self.state_name)
+        state = st.session_state.get(self.state_name)
         state[name] = value
     
     def reset_request_state(self):
-        if getattr(st.session_state, self.state_name, None) is not None:
+        if st.session_state.get(self.state_name, None) is not None:
             setattr(st.session_state, self.state_name, AttributeDict())
 
     def build(self, endpoint: str, values: typing.Dict = None, method: str = None):
