@@ -15,13 +15,14 @@ class StreamlitRouter:
     https://werkzeug.palletsprojects.com/en/2.0.x/routing/
     """
 
-    def __init__(self, default_path='/', inject_name='router', *, state_name='streamlit-router-state'):
+    def __init__(self, default_path='/', inject_name='router', *, session_prefix='streamlit-router-prefix:', state_name='streamlit-router-state'):
         self._map = Map()
         self.view_methods = {}
         self.views = {}
         self.default_path = default_path
         self.inject_name = inject_name
         self.state_name = state_name
+        self.session_prefix = session_prefix
         self.urls = self._map.bind("", "/")
         if not st.session_state.get(self.state_name, None):
             setattr(st.session_state, self.state_name, AttributeDict())
@@ -94,6 +95,9 @@ class StreamlitRouter:
     def reset_request_state(self):
         if st.session_state.get(self.state_name, None) is not None:
             setattr(st.session_state, self.state_name, AttributeDict())
+        for k in st.session_state.keys():
+            if k.startswith(self.session_prefix):
+                del st.session_state[k]
 
     def build(self, endpoint: str, values: typing.Dict = None, method: str = None):
         if not method and self.view_methods[endpoint]:
