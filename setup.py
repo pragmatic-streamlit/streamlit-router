@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='streamlit-router',
-    version='0.1.5',
-    author='mapix',
-    author_email='mapix.me@gmail.com',
+    name="streamlit-router",
+    version="0.1.6",
+    author="mapix",
+    author_email="mapix.me@gmail.com",
     packages=find_packages(),
-    install_requires=['streamlit', 'werkzeug'],
-    url='https://github.com/mapix/streamlit-router',
-    description='werkzeug router for streamlit',
-    long_description=open('README.md').read(),
+    install_requires=["streamlit", "werkzeug"],
+    url="https://github.com/mapix/streamlit-router",
+    description="werkzeug router for streamlit",
+    long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     classifiers=[
         "Intended Audience :: Developers",
@@ -22,5 +22,5 @@ setup(
         "Programming Language :: Python :: 3.10",
         "License :: OSI Approved",
         "Topic :: Scientific/Engineering",
-    ]
+    ],
 )

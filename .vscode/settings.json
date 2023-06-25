@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--max-line-length=240"],
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
+}
