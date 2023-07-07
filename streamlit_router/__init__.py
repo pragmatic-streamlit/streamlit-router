@@ -93,7 +93,9 @@ class StreamlitRouter:
         st.experimental_rerun()
 
     def get_request_id(self):
-        return st.session_state.get("request_id", uuid4().hex)
+        if st.session_state.get("request_id", None) is None:
+            st.session_state["request_id"] = uuid4().hex
+        return st.session_state.get("request_id")
 
     def get_request_state(self, name: str = None, default=None):
         if st.session_state.get(self.state_name, None) is None:
