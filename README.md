@@ -6,7 +6,7 @@
 pip install streamlit-router
 ```
 
-![image](https://github.com/pragmatic-streamlit/streamlit-router/assets/932699/7b729e96-12c7-4665-9f64-b8e6d0231eab)
+![20240423141943](https://github.com/pragmatic-streamlit/streamlit-router/assets/932699/d59e78f3-7b1e-422a-be3b-6546a1040ca2)
 
 
 ## Example
