@@ -133,12 +133,12 @@ class StreamlitRouter:
 
     def serve(self):
         request = st.session_state.get("request")
-        query_string = st.experimental_get_query_params()
+        query_string = st.get_query_params()
         if request:
             self.handle(*request)
             path, method = request
             query_string["request"] = [f"{method}:{path}"]
-            st.experimental_set_query_params(**query_string)
+            st.set_query_params(**query_string)
         elif "request" in query_string:
             method, path = query_string.get("request")[0].split(":")
             st.session_state["request"] = (path, method)
