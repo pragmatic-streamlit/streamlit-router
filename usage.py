@@ -1,17 +1,3 @@
-# streamlit-router
-
-## Install
-
-```
-pip install streamlit-router
-```
-
-![20240423141943](https://github.com/pragmatic-streamlit/streamlit-router/assets/932699/d59e78f3-7b1e-422a-be3b-6546a1040ca2)
-
-
-## Example
-
-```
 import streamlit as st
 from streamlit_router import StreamlitRouter
 
@@ -60,5 +46,3 @@ def view_task(x):
 
 
 router.serve()
-
-```

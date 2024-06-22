@@ -90,7 +90,10 @@ class StreamlitRouter:
         self.reset_request_state()
         st.session_state["request"] = (path, method)
         st.session_state["request_id"] = uuid4().hex
-        st.experimental_rerun()
+        if hasattr(st, "rerun"):
+            st.rerun()
+        else:
+            st.experimental_rerun()
 
     def get_request_id(self):
         if st.session_state.get("request_id", None) is None:
@@ -133,15 +136,30 @@ class StreamlitRouter:
 
     def serve(self):
         request = st.session_state.get("request")
-        query_string = st.experimental_get_query_params()
+        query_dict = (
+            st.query_params
+            if hasattr(st, "query_params")
+            else st.experimental_get_query_params()
+        )
         if request:
             self.handle(*request)
             path, method = request
-            query_string["request"] = [f"{method}:{path}"]
-            st.experimental_set_query_params(**query_string)
-        elif "request" in query_string:
-            method, path = query_string.get("request")[0].split(":")
+            query_dict["request"] = [f"{method}:{path}"]
+            if not hasattr(st, "query_params"):
+                st.experimental_set_query_params(**query_dict)
+        elif "request" in query_dict:
+            request = query_dict.get("request")
+            if isinstance(request, str):
+                method, path = request.split(":")
+            elif isinstance(request, list):
+                method, path = request[0].split(":")
+            else:
+                path = query_dict.get("request")[0]
+                method = "GET"
             st.session_state["request"] = (path, method)
-            st.experimental_rerun()
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
         else:
             self.handle(self.default_path)

@@ -2,10 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="streamlit-router",
-    version="0.1.7",
+    version="0.1.8",
     author="mapix",
     author_email="mapix.me@gmail.com",
-    packages=find_packages(),
+    packages=find_packages(exclude=["usage"]),
     install_requires=["streamlit", "werkzeug"],
     url="https://github.com/mapix/streamlit-router",
     description="werkzeug router for streamlit",
